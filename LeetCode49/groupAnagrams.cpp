@@ -31,9 +31,35 @@ using namespace std;
         return result;
     }
 
+
+/*解题思路2：使用字符计数作为键
+1. 遍历字符串数组，统计每个字符串中每个字符的出现次数，将出现次数作为键，将原始字符串作为值，存入哈希表。
+2. 遍历哈希表，将每个键对应的值（即字母异位词的列表）添加到结果列表中。
+*/
+
+    vector<vector<string>> groupAnagrams2(vector<string>& strs) {
+        unordered_map<string,vector<string>> hashMap; //哈希表，键为字符计数，值为对应的字母异位词列表
+        for(string str : strs){
+            vector<int> charCount(26, 0); //统计每个字符的出现次数
+            for(char c : str){
+                charCount[c - 'a']++; //将字符映射到索引0-25，并增加计数
+            }
+            string key; //将字符计数转换为字符串作为键
+            for(int count : charCount){
+                key += to_string(count) + "#"; //使用#分隔每个字符的计数
+            }
+            hashMap[key].push_back(str); //将原始字符串添加到对应的字母异位词列表中
+        }
+        vector<vector<string>> result;
+        for (auto it : hashMap) {
+            result.push_back(it.second); //将每个字母异位词列表添加到结果列表中
+        }
+        return result;
+    }
+
 int main(){
     vector<string> strs = {"eat", "tea", "tan", "ate", "nat", "bat"};
-    vector<vector<string>> result = groupAnagrams(strs);
+    vector<vector<string>> result = groupAnagrams2(strs);
      for (auto it : result) 
         for (auto str : it) {
             cout << str << " ";
